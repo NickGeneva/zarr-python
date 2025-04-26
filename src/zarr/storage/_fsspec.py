@@ -227,10 +227,10 @@ class FsspecStore(Store):
 
         try:
             if byte_range is None:
-                value = prototype.buffer.from_bytes(await self.fs._cat_file(path))
+                value = prototype.buffer.from_bytes(self.fs.cat(path))
             elif isinstance(byte_range, RangeByteRequest):
                 value = prototype.buffer.from_bytes(
-                    await self.fs._cat_file(
+                    self.fs.cat(
                         path,
                         start=byte_range.start,
                         end=byte_range.end,
@@ -238,11 +238,11 @@ class FsspecStore(Store):
                 )
             elif isinstance(byte_range, OffsetByteRequest):
                 value = prototype.buffer.from_bytes(
-                    await self.fs._cat_file(path, start=byte_range.offset, end=None)
+                    self.fs.cat(path, start=byte_range.offset, end=None)
                 )
             elif isinstance(byte_range, SuffixByteRequest):
                 value = prototype.buffer.from_bytes(
-                    await self.fs._cat_file(path, start=-byte_range.suffix, end=None)
+                    self.fs.cat(path, start=-byte_range.suffix, end=None)
                 )
             else:
                 raise ValueError(f"Unexpected byte_range, got {byte_range}.")
